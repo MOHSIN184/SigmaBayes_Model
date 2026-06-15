@@ -1,0 +1,12 @@
+metric,value
+accuracy,0.4219554030874786
+precision_macro,0.2874563168747966
+recall_macro,0.34672325665324116
+f1_macro,0.26880706016825157
+f1_weighted,0.41676591983307654
+mcc,0.13589400128111215
+per_class_precision,"{'Sigma24': np.float64(0.25), 'Sigma28': np.float64(0.2328767123287671), 'Sigma32': np.float64(0.22857142857142856), 'Sigma38': np.float64(0.0962962962962963), 'Sigma54': np.float64(0.26666666666666666), 'Sigma70': np.float64(0.6503267973856209)}"
+per_class_recall,"{'Sigma24': np.float64(0.01020408163265306), 'Sigma28': np.float64(0.6071428571428571), 'Sigma32': np.float64(0.13559322033898305), 'Sigma38': np.float64(0.34210526315789475), 'Sigma54': np.float64(0.4), 'Sigma70': np.float64(0.5852941176470589)}"
+per_class_f1,"{'Sigma24': np.float64(0.0196078431372549), 'Sigma28': np.float64(0.33663366336633666), 'Sigma32': np.float64(0.1702127659574468), 'Sigma38': np.float64(0.15028901734104047), 'Sigma54': np.float64(0.32), 'Sigma70': np.float64(0.6160990712074303)}"
+auroc_macro_ovr,0.6815790899386119
+auprc_macro_ovr,0.3031452072482394

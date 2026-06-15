@@ -1,0 +1,9 @@
+item,decision,evidence,recommendation
+Binary endpoint,Usable,Calibrated 5-mer Random Forest is strongest and stable in CV.,Use k-mer RF as the binary endpoint.
+Sigma endpoint,Weak/modest,Macro F1 remains below 0.50 and minority classes are difficult.,Do not present as a solved classifier.
+Deep learning novelty,Limited,CNN is not consistently better than classical k-mer models.,Avoid deep-learning superiority claims.
+Calibration contribution,Valuable,Reliability metrics quantify probability quality across models.,Keep as a central benchmark component.
+Conformal contribution,Valuable but cautious,"Coverage is measurable, but sigma prediction sets are large.","Frame as uncertainty quantification, not accuracy improvement."
+Journal readiness,Not ready for performance-focused journal,Sigma performance and validation are insufficient.,Add external/biological validation before submission.
+Best framing,Reliability-aware benchmark,Strongest contribution is calibrated comparison and failure analysis.,Reframe manuscript around trustworthy benchmarking.
+Required next improvement,External validation and more sigma data,Current sigma classes are imbalanced and overlapping.,Prioritize additional datasets and biological interpretation.

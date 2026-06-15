@@ -1,0 +1,12 @@
+metric,value
+accuracy,0.5849056603773585
+precision_macro,0.16715252472670483
+recall_macro,0.17563025210084035
+f1_macro,0.14331011289935142
+f1_weighted,0.4509292637211998
+mcc,0.07683882472319027
+per_class_precision,"{'Sigma24': np.float64(0.4117647058823529), 'Sigma28': np.float64(0.0), 'Sigma32': np.float64(0.0), 'Sigma38': np.float64(0.0), 'Sigma54': np.float64(0.0), 'Sigma70': np.float64(0.5911504424778761)}"
+per_class_recall,"{'Sigma24': np.float64(0.07142857142857142), 'Sigma28': np.float64(0.0), 'Sigma32': np.float64(0.0), 'Sigma38': np.float64(0.0), 'Sigma54': np.float64(0.0), 'Sigma70': np.float64(0.9823529411764705)}"
+per_class_f1,"{'Sigma24': np.float64(0.12173913043478261), 'Sigma28': np.float64(0.0), 'Sigma32': np.float64(0.0), 'Sigma38': np.float64(0.0), 'Sigma54': np.float64(0.0), 'Sigma70': np.float64(0.7381215469613259)}"
+auroc_macro_ovr,0.6953613964790722
+auprc_macro_ovr,0.2941730608008483
