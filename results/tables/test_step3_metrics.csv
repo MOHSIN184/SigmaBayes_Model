@@ -1,0 +1,12 @@
+metric,value
+accuracy,0.68
+precision_macro,0.6910016977928692
+recall_macro,0.68
+f1_macro,0.6753246753246753
+f1_weighted,0.6753246753246753
+mcc,0.3708385395436481
+per_class_precision,"{'Non-Promoter': np.float64(0.7368421052631579), 'Promoter': np.float64(0.6451612903225806)}"
+per_class_recall,"{'Non-Promoter': np.float64(0.56), 'Promoter': np.float64(0.8)}"
+per_class_f1,"{'Non-Promoter': np.float64(0.6363636363636364), 'Promoter': np.float64(0.7142857142857143)}"
+auroc,0.7504
+auprc,0.7564323313459004

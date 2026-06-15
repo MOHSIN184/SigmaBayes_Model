@@ -1,0 +1,5 @@
+dataset,total_sequences,class_distribution,min_length,max_length,mean_length,invalid_sequence_count,invalid_characters
+Binary Train,5258,"{'Non-Promoter': 2695, 'Promoter': 2563}",81,81,81.0,0,[]
+Binary Test,1315,"{'Non-Promoter': 674, 'Promoter': 641}",81,81,81.0,0,[]
+Sigma Train,2315,"{'Sigma70': 1358, 'Sigma24': 388, 'Sigma32': 234, 'Sigma38': 150, 'Sigma28': 108, 'Sigma54': 77}",81,81,81.0,0,[]
+Sigma Test,583,"{'Sigma70': 340, 'Sigma24': 98, 'Sigma32': 59, 'Sigma38': 38, 'Sigma28': 28, 'Sigma54': 20}",81,81,81.0,0,[]
