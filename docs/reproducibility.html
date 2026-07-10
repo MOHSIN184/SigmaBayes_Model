@@ -1,0 +1,16 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Reproducibility | BayesSigma</title><link rel="stylesheet" href="assets/css/style.css"></head><body><header class="site-header"><nav class="container nav"><a class="brand" href="index.html">BayesSigma</a><button class="menu" aria-label="Toggle navigation">Menu</button><div class="nav-links"><a href="index.html">Overview</a><a href="methodology.html">Methodology</a><a href="results.html">Results</a><a aria-current="page" href="reproducibility.html">Reproducibility</a><a href="demo.html">Demo</a></div></nav></header><main><section class="page-hero"><div class="container"><h1>Reproducibility</h1><p>Run these repository scripts from the project root; outputs are written to <code>results/</code>.</p></div></section><section><div class="container"><h2>Environment</h2><pre><code>python -m venv .venv
+# Windows: activate .venv/Scripts/Activate.ps1
+# macOS/Linux: source .venv/bin/activate
+python -m pip install --upgrade pip
+pip install -r requirements.txt</code></pre><p>Dependencies are NumPy, pandas, scikit-learn, Matplotlib, PyTorch, tqdm, and Jupyter. Requirements are unpinned; record package versions for archival reruns.</p><h2>Data audit and experiments</h2><pre><code>python scripts/run_dataset_check.py
+python scripts/run_binary_experiment.py
+python scripts/run_sigma_experiment.py
+python scripts/run_sigma_improved_experiment.py
+python scripts/run_sigma_safe_experiment.py
+python scripts/run_kmer_baselines.py
+python scripts/run_kmer_reliability.py
+python scripts/run_hybrid_experiment.py</code></pre><p>These scripts train and evaluate models and generate metric CSVs, reliability diagrams, uncertainty tables, and conformal outputs. Reruns may overwrite matching files.</p><h2>Stability, figures, and checks</h2><pre><code>python scripts/run_cross_validation.py
+python scripts/run_biological_error_analysis.py
+python scripts/generate_publication_package.py
+python scripts/final_project_check.py</code></pre><p>Calibration and conformal logic live in <code>src/calibration.py</code> and <code>src/conformal.py</code>. Five-fold training is computationally intensive.</p><h2>View and deploy</h2><pre><code>python -m http.server 8000 --directory docs
+# visit http://localhost:8000</code></pre><p>Or open <code>docs/index.html</code>. For Pages, push to GitHub, select “GitHub Actions” in Settings → Pages, and let the included workflow deploy <code>docs/</code>.</p><p class="note">TODO: replace the generic GitHub URL once known, and pin dependencies for a frozen environment.</p></div></section></main><footer class="site-footer"><div class="container">BayesSigma · Reproducible from scripts and recorded artifacts.</div></footer><script src="assets/js/main.js"></script></body></html>
