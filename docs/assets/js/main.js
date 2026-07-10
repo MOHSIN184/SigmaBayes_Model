@@ -16,6 +16,45 @@ document.addEventListener("DOMContentLoaded", () => {
   const runBinary = q("#run-binary");
   const runSigma = q("#run-sigma");
   const cleanUrl = value => value.trim().replace(/\/+$/, "");
+  function gradioSource(value) {
+    if (/^[A-Za-z0-9._-]+\/[A-Za-z0-9._-]+$/.test(value)) return value;
+    try {
+      const url = new URL(value);
+      const spaceMatch = url.pathname.match(/^\/spaces\/([^/]+)\/([^/]+)/);
+      if (url.hostname === "huggingface.co" && spaceMatch) {
+        return `${spaceMatch[1]}/${spaceMatch[2]}`;
+      }
+      if (url.hostname.endsWith(".hf.space")) return url.origin;
+    } catch (_) {
+      return null;
+    }
+    return null;
+  }
+  async function requestPrediction(target, payload) {
+    const source = gradioSource(target);
+    if (source) {
+      const { Client } = await import("https://cdn.jsdelivr.net/npm/@gradio/client/+esm");
+      const client = await Client.connect(source);
+      const result = await client.predict("/predict", [
+        payload.sequence,
+        payload.run_binary,
+        payload.run_sigma
+      ]);
+      const output = result.data[0];
+      return typeof output === "string" ? JSON.parse(output) : output;
+    }
+    const response = await fetch(`${target}/predict`, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(payload)
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      const detail = Array.isArray(data.detail) ? data.detail.map(item => item.msg).join("; ") : data.detail;
+      throw new Error(detail || `Backend returned HTTP ${response.status}.`);
+    }
+    return data;
+  }
   const escapeHtml = value => String(value ?? "").replace(/[&<>"']/g, character => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[character]));
   apiInput.value = localStorage.getItem("bayessigmaApiUrl") || "";
   apiInput.addEventListener("change", () => localStorage.setItem("bayessigmaApiUrl", cleanUrl(apiInput.value)));
@@ -76,12 +115,11 @@ document.addEventListener("DOMContentLoaded", () => {
     status.textContent = "Running artifact-backed inference...";
     submit.disabled = true;
     try {
-      const response = await fetch(`${api}/predict`, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({sequence, run_binary:runBinary.checked, run_sigma:runSigma.checked})});
-      const data = await response.json().catch(() => ({}));
-      if (!response.ok) {
-        const detail = Array.isArray(data.detail) ? data.detail.map(item => item.msg).join("; ") : data.detail;
-        throw new Error(detail || `Backend returned HTTP ${response.status}.`);
-      }
+      const data = await requestPrediction(api, {
+        sequence,
+        run_binary: runBinary.checked,
+        run_sigma: runSigma.checked
+      });
       render(data);
       status.textContent = "Prediction completed.";
       status.classList.add("success");

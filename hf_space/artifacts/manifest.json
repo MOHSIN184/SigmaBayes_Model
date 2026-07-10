@@ -1,0 +1,90 @@
+{
+  "project": "BayesSigma",
+  "input_length": 81,
+  "alphabet": [
+    "A",
+    "C",
+    "G",
+    "T"
+  ],
+  "available_outputs": [
+    "raw_probabilities",
+    "gc_content",
+    "temperature_scaled_probabilities",
+    "conformal_sets_90",
+    "conformal_sets_95",
+    "sigma_mc_dropout_uncertainty"
+  ],
+  "tasks": {
+    "binary": {
+      "labels": [
+        "Non-Promoter",
+        "Promoter"
+      ],
+      "selected_model": "calibrated_5mer_random_forest",
+      "artifact_path": "artifacts/binary_calibrated_5mer_random_forest.joblib",
+      "preprocessing_config": "artifacts/binary_5mer_config.json",
+      "preprocessing_config_sha256": "a5831c13961569f2e17568c06e3e3bafcdc623ab1aae10b43878ec075f5dde16",
+      "sha256": "63689ac452362e2775d24211734103b61a9e0120494cbe33ec3e20516814746e",
+      "architecture": "RandomForestClassifier + isotonic CalibratedClassifierCV",
+      "feature_type": "normalized_kmer_counts",
+      "kmer_size": 5,
+      "random_state": 42,
+      "calibration_artifact": "embedded in joblib bundle",
+      "conformal_thresholds": {
+        "90": 0.7352941176470589,
+        "95": 0.8714285714285714
+      },
+      "conformal_artifact": "results/tables/kmer_reliability_binary_conformal_metrics.csv",
+      "status": "ready",
+      "fallback_model": {
+        "labels": [
+          "Non-Promoter",
+          "Promoter"
+        ],
+        "selected_model": "binary_cnn",
+        "artifact_path": "artifacts/binary_cnn.pt",
+        "sha256": "40dce879c486e07b233c2a2e89b47045280320acf63ba0cfbe861f94f848d9f4",
+        "architecture": "CNNPromoterClassifier",
+        "feature_type": "one_hot_acgt",
+        "kmer_size": null,
+        "dropout": 0.3,
+        "temperature": 0.9811462759971619,
+        "calibration_artifact": "results/tables/binary_calibration_metrics.csv",
+        "conformal_thresholds": {
+          "90": 0.6862518191337585,
+          "95": 0.8348986804485321
+        },
+        "conformal_artifact": "results/tables/binary_conformal_metrics.csv",
+        "status": "ready"
+      }
+    },
+    "sigma": {
+      "labels": [
+        "Sigma24",
+        "Sigma28",
+        "Sigma32",
+        "Sigma38",
+        "Sigma54",
+        "Sigma70"
+      ],
+      "selected_model": "safe_f1_selected_sigma_cnn",
+      "artifact_path": "artifacts/sigma_safe_cnn.pt",
+      "sha256": "2cf260c7bdde8189287619c7de6db99e7f4b9bddfcead0c4e37ee4cd2da78faf",
+      "architecture": "CNNPromoterClassifier",
+      "feature_type": "one_hot_acgt",
+      "kmer_size": null,
+      "dropout": 0.3,
+      "temperature": 1.0050297975540161,
+      "calibration_artifact": "results/tables/sigma_safe_calibration_metrics.csv",
+      "conformal_thresholds": {
+        "90": 0.9157239645719528,
+        "95": 0.9437882713973522
+      },
+      "conformal_artifact": "results/tables/sigma_safe_conformal_metrics.csv",
+      "status": "ready",
+      "mc_dropout_passes": 30
+    }
+  },
+  "warnings": []
+}

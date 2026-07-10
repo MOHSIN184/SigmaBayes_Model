@@ -20,3 +20,25 @@ server/.env
 Hello.json
 Supplementary Material.docx
 DNA_CNN_Architecture/
+
+# Local Python virtual environments
+.venv/
+server/.venv/
+hf_space/.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Local Python virtual environments
+.venv/
+server/.venv/
+hf_space/.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
