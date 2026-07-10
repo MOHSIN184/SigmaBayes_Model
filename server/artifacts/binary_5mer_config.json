@@ -1,0 +1,39 @@
+{
+  "model_name": "calibrated_5mer_random_forest",
+  "input_length": 81,
+  "labels": [
+    "Non-Promoter",
+    "Promoter"
+  ],
+  "feature_type": "normalized_kmer_counts",
+  "kmer_size": 5,
+  "feature_count": 1024,
+  "feature_order": "lexicographic_ACGT",
+  "normalize": true,
+  "random_state": 42,
+  "split": {
+    "train": 0.7,
+    "validation": 0.15,
+    "calibration": 0.15,
+    "stratified": true
+  },
+  "estimator": {
+    "type": "RandomForestClassifier",
+    "n_estimators": 500,
+    "class_weight": "balanced"
+  },
+  "calibration": {
+    "method": "isotonic",
+    "split": "validation"
+  },
+  "conformal_thresholds": {
+    "90": 0.7352941176470589,
+    "95": 0.8714285714285714
+  },
+  "verified_test_metrics": {
+    "accuracy": 0.8083650190114069,
+    "f1_macro": 0.8077726266549723,
+    "auroc": 0.8720760403116422
+  },
+  "source_script": "scripts/run_kmer_reliability.py"
+}

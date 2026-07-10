@@ -1,0 +1,22 @@
+
+# Python / backend local files
+server/.venv/
+server/**/__pycache__/
+server/**/*.pyc
+server/.env
+
+# Local/unrelated files
+Hello.json
+Supplementary Material.docx
+DNA_CNN_Architecture/
+
+# Python / backend local files
+server/.venv/
+server/**/__pycache__/
+server/**/*.pyc
+server/.env
+
+# Local/unrelated files
+Hello.json
+Supplementary Material.docx
+DNA_CNN_Architecture/
