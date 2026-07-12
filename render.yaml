@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: bayessigma
+    runtime: docker
+    plan: free
+    dockerfilePath: ./hf_space/Dockerfile
+    dockerContext: ./hf_space
+    healthCheckPath: /
+    envVars:
+      - key: PORT
+        value: 10000

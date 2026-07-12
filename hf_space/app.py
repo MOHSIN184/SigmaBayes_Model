@@ -1,6 +1,7 @@
 """Free CPU Gradio Space adapter for verified BayesSigma inference."""
 from __future__ import annotations
 
+import os
 from typing import Any
 
 import gradio as gr
@@ -64,4 +65,7 @@ with gr.Blocks(title="BayesSigma") as demo:
     )
 
 if __name__ == "__main__":
-    demo.launch()
+    demo.launch(
+        server_name="0.0.0.0",
+        server_port=int(os.getenv("PORT", "7860")),
+    )
