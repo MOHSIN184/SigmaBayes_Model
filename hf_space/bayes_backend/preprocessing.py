@@ -44,12 +44,13 @@ def generate_kmers(k: int) -> list[str]:
 
 def normalized_kmer_vector(sequence: str, k: int) -> np.ndarray:
     """Match normalized count-vector logic used by repository k-mer scripts."""
-    kmers = generate_kmers(k)
-    lookup = {kmer: index for index, kmer in enumerate(kmers)}
-    counts = np.zeros(len(kmers), dtype=np.float32)
+    counts = np.zeros(4**k, dtype=np.float32)
     windows = len(sequence) - k + 1
     for start in range(windows):
-        counts[lookup[sequence[start : start + k]]] += 1.0
+        index = 0
+        for nucleotide in sequence[start : start + k]:
+            index = index * 4 + DNA_TO_INDEX[nucleotide]
+        counts[index] += 1.0
     if windows > 0:
         counts /= float(windows)
     return counts

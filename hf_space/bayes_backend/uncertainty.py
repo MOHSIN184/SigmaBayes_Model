@@ -18,11 +18,14 @@ def mc_dropout(
 ) -> dict[str, object]:
     _enable_dropout(model)
     samples = []
+    chunk_size = min(10, passes)
     with torch.inference_mode():
-        for _ in range(passes):
-            samples.append(torch.softmax(model(inputs), dim=1).cpu().numpy()[0])
+        for start in range(0, passes, chunk_size):
+            current_size = min(chunk_size, passes - start)
+            repeated = inputs.repeat(current_size, 1, 1)
+            samples.append(torch.softmax(model(repeated), dim=1).cpu().numpy())
     model.eval()
-    mc_probabilities = np.stack(samples)
+    mc_probabilities = np.concatenate(samples, axis=0)
     mean_probabilities = mc_probabilities.mean(axis=0)
     eps = 1e-12
     entropy = -np.sum(mean_probabilities * np.log(mean_probabilities + eps))

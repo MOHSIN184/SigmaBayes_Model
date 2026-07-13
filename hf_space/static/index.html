@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="BayesSigma promoter and sigma-factor prediction web server">
+  <title>BayesSigma | Promoter Prediction</title>
+  <link rel="stylesheet" href="/static/app.css?v=2.1.0">
+  <script src="/static/app.js?v=2.1.0" defer></script>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <a class="brand" href="/" aria-label="BayesSigma home"><span aria-hidden="true">βΣ</span> BayesSigma Research Server</a>
+      <h1>Promoter Prediction Web Server</h1>
+      <p>An AI-powered server for predicting bacterial promoter sequences and associated sigma factors using calibrated machine learning and deep learning.</p>
+      <ul class="tags" aria-label="Server capabilities"><li>81 bp input</li><li>Batch FASTA analysis</li><li>Calibrated confidence</li><li>Uncertainty-aware</li></ul>
+    </div>
+  </header>
+
+  <main class="wrap workspace">
+    <div class="input-grid">
+      <section class="card" aria-labelledby="analysis-heading">
+        <h2 id="analysis-heading">Sequence analysis</h2>
+        <p class="intro">Paste one sequence per line or upload a multi-record FASTA file. Every sequence must contain exactly 81 DNA bases.</p>
+
+        <label for="sequence-input">DNA sequence input</label>
+        <textarea id="sequence-input" rows="7" spellcheck="false" placeholder="Paste an 81 bp DNA sequence, multiple sequences, or FASTA-formatted text…"></textarea>
+
+        <label for="file-input">Upload FASTA or text file</label>
+        <input id="file-input" type="file" accept=".fasta,.fa,.txt,text/plain">
+        <p class="hint">Accepted: .fasta, .fa, .txt · Maximum 10 MB and 5,000 records</p>
+
+        <fieldset>
+          <legend>Prediction tasks</legend>
+          <label class="check"><input id="binary-input" type="checkbox" checked> Promoter prediction</label>
+          <label class="check"><input id="sigma-input" type="checkbox"> Sigma-factor prediction</label>
+        </fieldset>
+
+        <div class="actions">
+          <button id="submit-button" class="primary" type="button"><span class="spinner" aria-hidden="true"></span><span class="button-label">Predict sequences</span></button>
+          <button id="reset-button" class="secondary" type="button">Reset</button>
+        </div>
+        <div id="status" class="alert info" role="status" aria-live="polite">Ready for sequence input.</div>
+      </section>
+
+      <aside class="card" aria-labelledby="example-heading">
+        <h2 id="example-heading">Example input</h2>
+        <p class="intro">Load a verified sequence to explore the workflow.</p>
+        <div class="example">
+          <strong>Example Input</strong>
+          <code id="example-sequence">AAGTCATGAAACGATTCAAACATGGCGCGAATATTTATGTGATGCCTCCTTTACCGTCGCTCTCTGGTTAACACCCCATGC</code>
+          <small>Exactly 81 bp · A/C/G/T alphabet</small>
+        </div>
+        <button id="example-button" class="secondary full" type="button">Use Example</button>
+        <div class="example fasta-help"><strong>FASTA format</strong><code>&gt;Sequence_1<br>ACGT…<br>&gt;Sequence_2<br>TGCA…</code><small>Headers are used as sequence identifiers and ignored during validation.</small></div>
+      </aside>
+    </div>
+
+    <section class="card results" aria-labelledby="results-heading">
+      <h2 id="results-heading">Prediction results</h2>
+      <p class="intro">Review class assignments, confidence, sigma-factor output, and validation status.</p>
+      <div id="summary" hidden></div>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Sequence ID</th><th>Length</th><th>Prediction</th><th>Confidence</th><th>Sigma Factor</th><th>Processing Time</th><th>Status</th></tr></thead>
+          <tbody id="result-body"><tr class="empty"><td colspan="7">Results will appear here after prediction.</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="info-grid">
+      <section class="card"><h2>Citation</h2><p>If you use this web server in your research, please cite our publication.</p><blockquote><strong>BayesSigma Research Team.</strong> BayesSigma: reliability-aware promoter and sigma-factor prediction using calibrated machine learning. <em>Journal reference pending.</em><br><strong>DOI:</strong> 10.0000/bayessigma.placeholder</blockquote></section>
+      <section class="card"><h2>Useful Resources</h2><nav class="links" aria-label="External bioinformatics resources"><a href="https://www.ncbi.nlm.nih.gov/" target="_blank" rel="noopener noreferrer">NCBI</a><a href="https://www.ensembl.org/" target="_blank" rel="noopener noreferrer">Ensembl</a><a href="http://www.softberry.com/berry.phtml?topic=plantprom&amp;group=data&amp;subgroup=plantprom" target="_blank" rel="noopener noreferrer">PlantProm DB</a><a href="https://jaspar.elixir.no/" target="_blank" rel="noopener noreferrer">JASPAR</a><a href="https://epd.expasy.org/epd/" target="_blank" rel="noopener noreferrer">Promoter Database</a></nav></section>
+    </div>
+  </main>
+
+  <footer><div class="wrap footer-inner"><div><strong>BayesSigma</strong><br>Computational Biology Research Web Server</div><div>Developer: MMohsin · Independent Computational Biology Research Project<br><a href="mailto:mmohsinfarooqhussain@gmail.com">mmohsinfarooqhussain@gmail.com</a> · <a href="https://github.com/MOHSIN184/SigmaBayes_Model" target="_blank" rel="noopener noreferrer">GitHub</a> · Version 2.1.0<br>© 2026 BayesSigma. All rights reserved.</div></div></footer>
+</body>
+</html>

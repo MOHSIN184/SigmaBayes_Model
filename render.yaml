@@ -5,7 +5,7 @@ services:
     plan: free
     dockerfilePath: ./hf_space/Dockerfile
     dockerContext: ./hf_space
-    healthCheckPath: /
+    healthCheckPath: /health
     envVars:
       - key: PORT
         value: 10000
