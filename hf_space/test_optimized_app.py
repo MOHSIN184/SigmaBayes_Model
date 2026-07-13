@@ -55,6 +55,51 @@ def test_single_prediction_contract_is_preserved() -> None:
     assert payload["warnings"] == []
 
 
+def test_sigma_runs_for_predicted_promoter() -> None:
+    response = TestClient(app).post(
+        "/predict",
+        json={"sequence": PROMOTER, "run_binary": True, "run_sigma": True},
+    )
+    payload = response.json()
+    assert response.status_code == 200
+    assert payload["binary"]["predicted_label"] == "Promoter"
+    assert payload["sigma"]["available"] is True
+    assert payload["sigma"]["predicted_label"].startswith("Sigma")
+
+
+def test_sigma_is_skipped_for_predicted_non_promoter() -> None:
+    response = TestClient(app).post(
+        "/predict",
+        json={"sequence": NON_PROMOTER, "run_binary": True, "run_sigma": True},
+    )
+    payload = response.json()
+    assert response.status_code == 200
+    assert payload["binary"]["predicted_label"] == "Non-Promoter"
+    assert payload["sigma"]["available"] is False
+    assert payload["sigma"]["predicted_label"] == ""
+    assert "skipped" in payload["sigma"]["uncertainty"]["note"].lower()
+    assert payload["warnings"] == []
+
+
+def test_batch_leaves_sigma_column_empty_for_non_promoter() -> None:
+    response = TestClient(app).post(
+        "/predict-batch",
+        json={
+            "records": [
+                {"id": "promoter", "sequence": PROMOTER},
+                {"id": "non_promoter", "sequence": NON_PROMOTER},
+            ],
+            "run_binary": True,
+            "run_sigma": True,
+        },
+    )
+    payload = response.json()
+    assert response.status_code == 200
+    assert payload["results"][0]["sigma_factor"].startswith("Sigma")
+    assert payload["results"][1]["prediction"] == "Non-Promoter"
+    assert payload["results"][1]["sigma_factor"] == ""
+
+
 def test_former_gradio_call_url_remains_compatible() -> None:
     client = TestClient(app)
     started = client.post(

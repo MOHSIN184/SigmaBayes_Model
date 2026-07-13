@@ -94,18 +94,18 @@ def predict(
     run_binary: bool,
     run_sigma: bool,
 ) -> PredictionResponse:
-    needs_tensor = (
-        run_sigma and registry.sigma_model is not None
-    ) or (
-        run_binary
-        and registry.binary_model is not None
-        and not isinstance(registry.binary_model, dict)
-    )
-    inputs = (
-        torch.from_numpy(one_hot_encode(sequence)).unsqueeze(0).to(registry.device)
-        if needs_tensor
-        else None
-    )
+    inputs: torch.Tensor | None = None
+
+    def encoded_inputs() -> torch.Tensor:
+        nonlocal inputs
+        if inputs is None:
+            inputs = (
+                torch.from_numpy(one_hot_encode(sequence))
+                .unsqueeze(0)
+                .to(registry.device)
+            )
+        return inputs
+
     warnings = list(registry.warnings)
     binary = TaskPrediction(available=False)
     sigma = _unavailable_sigma("Sigma inference was not requested.")
@@ -120,27 +120,30 @@ def predict(
                 registry.manifest["tasks"]["binary"],
             )
         else:
-            assert inputs is not None
             binary, _ = _predict_task(
                 registry.binary_model,
-                inputs,
+                encoded_inputs(),
                 registry.manifest["tasks"]["binary"]["fallback_model"],
             )
 
     if run_sigma:
-        if registry.sigma_model is None:
+        if binary.available and binary.predicted_label == "Non-Promoter":
+            sigma = _unavailable_sigma(
+                "Sigma inference was skipped because the sequence was predicted "
+                "as Non-Promoter."
+            )
+        elif registry.sigma_model is None:
             sigma = _unavailable_sigma("Sigma model is unavailable.")
             warnings.append("Sigma prediction requested but its model is unavailable.")
         else:
-            assert inputs is not None
             task_output, _ = _predict_task(
                 registry.sigma_model,
-                inputs,
+                encoded_inputs(),
                 registry.manifest["tasks"]["sigma"],
             )
             uncertainty = mc_dropout(
                 registry.sigma_model,
-                inputs,
+                encoded_inputs(),
                 passes=int(registry.manifest["tasks"]["sigma"]["mc_dropout_passes"]),
             )
             sigma = SigmaPrediction(
@@ -155,12 +158,6 @@ def predict(
                     ),
                 ),
             )
-            if binary.available and binary.predicted_label == "Non-Promoter":
-                warnings.append(
-                    "Sigma-factor prediction is biologically meaningful primarily "
-                    "for promoter-like sequences."
-                )
-
     return PredictionResponse(
         valid=True,
         sequence=sequence,
