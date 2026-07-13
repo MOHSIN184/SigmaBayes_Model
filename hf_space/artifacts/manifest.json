@@ -24,7 +24,7 @@
       "selected_model": "calibrated_5mer_random_forest",
       "artifact_path": "artifacts/binary_calibrated_5mer_random_forest.joblib",
       "preprocessing_config": "artifacts/binary_5mer_config.json",
-      "preprocessing_config_sha256": "a5831c13961569f2e17568c06e3e3bafcdc623ab1aae10b43878ec075f5dde16",
+      "preprocessing_config_sha256": "5518cc86fd4f34876082b327d6d9a6bddf0526b391155d1d382c783dc0c66017",
       "sha256": "63689ac452362e2775d24211734103b61a9e0120494cbe33ec3e20516814746e",
       "architecture": "RandomForestClassifier + isotonic CalibratedClassifierCV",
       "feature_type": "normalized_kmer_counts",

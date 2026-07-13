@@ -68,6 +68,12 @@ def _sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def _sha256_text(path: Path) -> str:
+    """Hash text artifacts canonically so Git line endings cannot disable a model."""
+    content = path.read_bytes().replace(b"\r\n", b"\n")
+    return hashlib.sha256(content).hexdigest()
+
+
 def _load_task_model(task: dict, device: torch.device) -> nn.Module:
     artifact_path = ARTIFACT_DIR.parent / task["artifact_path"]
     if not artifact_path.is_file():
@@ -98,7 +104,8 @@ def _load_binary_random_forest(task: dict) -> dict:
         raise ValueError("Random Forest artifact checksum mismatch.")
     if (
         task.get("preprocessing_config_sha256")
-        and _sha256(config_path) != task["preprocessing_config_sha256"].lower()
+        and _sha256_text(config_path)
+        != task["preprocessing_config_sha256"].lower()
     ):
         raise ValueError("Random Forest preprocessing config checksum mismatch.")
     with config_path.open(encoding="utf-8") as handle:
