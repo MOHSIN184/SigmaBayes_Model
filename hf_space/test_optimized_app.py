@@ -59,9 +59,13 @@ def test_summary_chart_is_dependency_free_and_accessible() -> None:
     assert "chart.js" not in page.lower()
     assert 'role="img"' in page
     assert 'role="tooltip"' in page
+    assert 'id="chart-sigma-segments"' in page
     assert "renderPredictionChart(data)" in script
     assert "result.prediction === \"Promoter\"" in script
-    assert "Boolean(result.sigma_factor)" in script
+    assert "sigmaClassCounts(results)" in script
+    assert 'segment.classList.add("chart-segment", "chart-sigma-class")' in script
+    assert "index * 137.508" in script
+    assert ".chart-empty[hidden]" in styles
     assert ".chart-content[hidden]" in styles
 
 

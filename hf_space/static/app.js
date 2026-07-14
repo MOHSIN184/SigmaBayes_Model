@@ -22,11 +22,12 @@ const ui = {
     visual: $("chart-visual"),
     tooltip: $("chart-tooltip"),
     totalValue: $("chart-total-value"),
+    sigmaGroup: $("chart-sigma-segments"),
+    sigmaLegendDot: $("legend-sigma-dot"),
     segments: {
       total: $("chart-total"),
       promoters: $("chart-promoters"),
       nonPromoters: $("chart-non-promoters"),
-      sigma: $("chart-sigma"),
     },
     legends: {
       total: $("legend-total"),
@@ -187,6 +188,67 @@ function configureSegment(segment, label, count, percent, offset = 0) {
   title.textContent = tooltip;
 }
 
+function bindChartInteractions(segment) {
+  segment.addEventListener("pointerenter", (event) => showChartTooltip(segment, event));
+  segment.addEventListener("pointermove", (event) => showChartTooltip(segment, event));
+  segment.addEventListener("pointerleave", hideChartTooltip);
+  segment.addEventListener("focus", () => showChartTooltip(segment));
+  segment.addEventListener("blur", hideChartTooltip);
+}
+
+function sigmaColor(index) {
+  const hue = (268 + index * 137.508) % 360;
+  return `hsl(${hue.toFixed(1)} 58% 58%)`;
+}
+
+function sigmaClassCounts(results) {
+  const counts = new Map();
+  for (const result of results) {
+    const label = String(result.sigma_factor || "").trim();
+    if (label) counts.set(label, (counts.get(label) || 0) + 1);
+  }
+  return [...counts.entries()].sort(([left], [right]) =>
+    left.localeCompare(right, undefined, { numeric: true }),
+  );
+}
+
+function renderSigmaSegments(entries, total) {
+  ui.chart.sigmaGroup.replaceChildren();
+  let offset = 0;
+  const gradientStops = [];
+  const sigmaTotal = entries.reduce((sum, [, count]) => sum + count, 0);
+  let gradientOffset = 0;
+
+  entries.forEach(([label, count], index) => {
+    const color = sigmaColor(index);
+    const percent = percentage(count, total);
+    const segment = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    segment.setAttribute("cx", "90");
+    segment.setAttribute("cy", "90");
+    segment.setAttribute("r", "39");
+    segment.setAttribute("pathLength", "100");
+    segment.setAttribute("tabindex", "0");
+    segment.classList.add("chart-segment", "chart-sigma-class");
+    segment.style.stroke = color;
+    segment.style.animationDelay = `${Math.min(.15 + index * .035, .45)}s`;
+    configureSegment(segment, label, count, percent, offset);
+    bindChartInteractions(segment);
+    ui.chart.sigmaGroup.append(segment);
+    offset += percent;
+
+    const legendPercent = sigmaTotal ? (count / sigmaTotal) * 100 : 0;
+    gradientStops.push(
+      `${color} ${gradientOffset}%`,
+      `${color} ${gradientOffset + legendPercent}%`,
+    );
+    gradientOffset += legendPercent;
+  });
+
+  ui.chart.sigmaLegendDot.style.background = gradientStops.length
+    ? `conic-gradient(${gradientStops.join(",")})`
+    : "#9c6ade";
+}
+
 function renderPredictionChart(data) {
   const results = Array.isArray(data.results) ? data.results : [];
   const total = results.length;
@@ -194,11 +256,11 @@ function renderPredictionChart(data) {
   const nonPromoters = results.filter(
     (result) => result.prediction === "Non-Promoter",
   ).length;
-  const sigmaFactors = results.filter((result) => Boolean(result.sigma_factor)).length;
+  const sigmaClasses = sigmaClassCounts(results);
+  const sigmaFactors = sigmaClasses.reduce((sum, [, count]) => sum + count, 0);
 
   const promoterPercent = percentage(promoters, total);
   const nonPromoterPercent = percentage(nonPromoters, total);
-  const sigmaPercent = percentage(sigmaFactors, total);
 
   configureSegment(ui.chart.segments.total, "Total Sequences", total, 100);
   configureSegment(ui.chart.segments.promoters, "Promoters", promoters, promoterPercent);
@@ -209,7 +271,7 @@ function renderPredictionChart(data) {
     nonPromoterPercent,
     promoterPercent,
   );
-  configureSegment(ui.chart.segments.sigma, "Sigma Factors", sigmaFactors, sigmaPercent);
+  renderSigmaSegments(sigmaClasses, total);
 
   ui.chart.totalValue.textContent = total.toLocaleString();
   ui.chart.legends.total.textContent = total.toLocaleString();
@@ -241,11 +303,7 @@ function hideChartTooltip() {
 
 function initializeChartInteractions() {
   for (const segment of Object.values(ui.chart.segments)) {
-    segment.addEventListener("pointerenter", (event) => showChartTooltip(segment, event));
-    segment.addEventListener("pointermove", (event) => showChartTooltip(segment, event));
-    segment.addEventListener("pointerleave", hideChartTooltip);
-    segment.addEventListener("focus", () => showChartTooltip(segment));
-    segment.addEventListener("blur", hideChartTooltip);
+    bindChartInteractions(segment);
   }
 }
 
