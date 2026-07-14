@@ -38,9 +38,31 @@ def test_health_and_lightweight_homepage() -> None:
     page = client.get("/")
     assert page.status_code == 200
     assert "Promoter Prediction Web Server" in page.text
-    for feature in ("Use Example", "Reset", "Upload FASTA", "Citation", "Useful Resources"):
+    for feature in (
+        "Use Example",
+        "Reset",
+        "Upload FASTA",
+        "Prediction Summary",
+        "Run a prediction to view the summary chart.",
+        "Citation",
+        "Useful Resources",
+    ):
         assert feature in page.text
     assert len(page.content) < 10_000
+
+
+def test_summary_chart_is_dependency_free_and_accessible() -> None:
+    client = TestClient(app)
+    page = client.get("/").text
+    script = client.get("/static/app.js").text
+    styles = client.get("/static/chart.css").text
+    assert "chart.js" not in page.lower()
+    assert 'role="img"' in page
+    assert 'role="tooltip"' in page
+    assert "renderPredictionChart(data)" in script
+    assert "result.prediction === \"Promoter\"" in script
+    assert "Boolean(result.sigma_factor)" in script
+    assert ".chart-content[hidden]" in styles
 
 
 def test_single_prediction_contract_is_preserved() -> None:

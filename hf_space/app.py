@@ -31,7 +31,7 @@ from bayes_backend.schemas import (
 from bayes_backend.utils import cors_origins
 from web_utils import MAX_RECORDS, validate_web_sequence
 
-APP_VERSION = "2.1.0"
+APP_VERSION = "2.2.0"
 STATIC_DIR = Path(__file__).resolve().parent / "static"
 MAX_SIGMA_BATCH = 25
 MAX_REQUEST_BYTES = 2 * 1024 * 1024
