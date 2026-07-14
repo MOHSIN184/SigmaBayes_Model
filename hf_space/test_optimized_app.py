@@ -46,6 +46,8 @@ def test_health_and_lightweight_homepage() -> None:
         "Run a prediction to view the summary chart.",
         "Citation",
         "Useful Resources",
+        "Supervisor: <strong>Dr. Shujaat</strong>",
+        "shujaat@szu.edu.cn",
     ):
         assert feature in page.text
     assert len(page.content) < 10_000
