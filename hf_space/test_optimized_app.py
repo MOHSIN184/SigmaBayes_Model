@@ -46,6 +46,7 @@ def test_health_and_lightweight_homepage() -> None:
         "Run a prediction to view the summary chart.",
         "Citation",
         "Useful Resources",
+        "Developer: <strong>Muhammad Mohsin</strong>",
         "Supervisor: <strong>Dr. Shujaat</strong>",
         "shujaat@szu.edu.cn",
     ):
